@@ -12,7 +12,9 @@ class LocalStorage(ABC):
 class CSVLocalStorage(LocalStorage):
     @override
     def save_data(self, df: pd.DataFrame):
-        df.to_csv('data.csv',encoding="utf-8-sig")
+        dfRead = pd.read_csv(r'D:\python项目位置\Stock_Analysis\Data_Loader\data.csv')
+        dfre=pd.concat([dfRead, df], ignore_index=True)
+        dfre.to_csv('data.csv',encoding="utf-8-sig")
 
 # 历史数据
 class CSVLocalStorageHistory(LocalStorage):

@@ -2,6 +2,7 @@ from Data_Loader.RequestData.api_crawler import *
 from Data_Loader.RequestData.LoadDataController import *
 from Data_Loader.SaveData.SaveDataController import *
 from Data_Loader.SaveData.local_storage import *
+from apscheduler.schedulers.blocking  import BlockingScheduler
 ## 创建读取AKShare实时数据接口的实例化对象
 stock_akshare = stock_akshare()
 ## csv格式实时数据保存器对象
@@ -24,16 +25,24 @@ CSVLocalStorageIndividual = CSVLocalStorageIndividual()
 
 手动切换策略
 """
+scheduler = BlockingScheduler()
 
 
 ## 创建读取策略管理器对象
-loadDataController = LoadData(stock_akshare_financial)
+loadDataController = LoadData(stock_akshare)
 ## 数据保存控制器对象
-saveDatacontroller = SaveDataController(CSVLocalStorageFinancial)
+saveDatacontroller = SaveDataController(CSVLocalStorage)
 
 
 
-data = loadDataController.ReadData()
+
 # 保存
-saveDatacontroller.SaveData(data)
-print(data)
+
+def ReadAndSaveData():
+    data = loadDataController.ReadData()
+    saveDatacontroller.SaveData(data)
+    print(data)
+scheduler.add_job(ReadAndSaveData,  'interval', hours=1, id='hourly_stock')
+
+scheduler.start()
+

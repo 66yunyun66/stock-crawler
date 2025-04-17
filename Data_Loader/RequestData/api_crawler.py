@@ -1,3 +1,4 @@
+from datetime import time, datetime
 
 # 对接Tushare/AKShare等数据接口[2]()
 # 这里选用不收费的AkShare
@@ -18,6 +19,7 @@ class stock_akshare(DataCrawler):
     @override
     def request_data(self)->pd.DataFrame:
         data = ak.stock_zh_a_spot_em()
+        data["时间"] = datetime.now().strftime("%Y-%m-%d  %H:%M:%S")
 
         return data
 
